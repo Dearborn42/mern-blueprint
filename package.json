@@ -1,0 +1,38 @@
+{
+  "name": "mern-blueprint",
+  "version": "1.0.0",
+  "description": "Basic blueprint for mern stack",
+  "main": "index.js",
+  "scripts": {
+    "server": "mkdir server && cd server && touch .env && touch .gitignore && echo node_modules >> .gitignore && echo .env >> .gitignore && npm init -y && npm install express bcrypt body-parser cors dotenv express-session mongodb mongoose passport passport-local && touch app.js && mkdir config controllers middleware models routes && cd ../",
+    "react": "npx create-react-app client && cd client && npm install react-router-dom bootstrap",
+    "create-mern-stack": "npm run server && npm run react"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dearborn42/mern-blueprint.git"
+  },
+  "keywords": [
+    "mern",
+    "stack",
+    "blueprint"
+  ],
+  "author": "Dearborn42 - amurf26@outlook.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Dearborn42/mern-blueprint/issues"
+  },
+  "homepage": "https://github.com/Dearborn42/mern-blueprint#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "mongodb": "^6.2.0",
+    "mongoose": "^8.0.0",
+    "passport": "^0.6.0",
+    "passport-local": "^1.0.0"
+  }
+}
