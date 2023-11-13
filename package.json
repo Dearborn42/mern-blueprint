@@ -4,7 +4,7 @@
   "description": "Basic blueprint for mern stack",
   "main": "index.js",
   "scripts": {
-    "server": "mkdir server && cd server && touch .env && touch .gitignore && echo node_modules >> .gitignore && echo .env >> .gitignore && npm init -y && npm install express bcrypt body-parser cors dotenv express-session mongodb mongoose passport passport-local && touch app.js && mkdir config controllers middleware models routes && node ../index.js && cd ../",
+    "server": "mkdir server && cd server && touch .env && touch .gitignore && echo node_modules >> .gitignore && echo .env >> .gitignore && npm init -y && npm install express bcrypt body-parser cors dotenv express-session mongodb mongoose passport passport-local && touch app.js && mkdir config controllers middleware models routes && node ../envWrite.js && node ../appWrite.js && cd ../",
     "react": "npx create-react-app client && cd client && npm install react-router-dom bootstrap",
     "create-mern-stack": "npm run server && npm run react"
   },
