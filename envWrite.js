@@ -1,7 +1,6 @@
 const readline = require('readline');
 const fs = require('fs');
 const path = require('path');
-
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
@@ -23,9 +22,10 @@ rl.question('Enter your MongoDB connection string: ', (mongoURI) => {
     }
     rl.question('Enter your port number: ', (port) => {
         try {
-        fs.appendFileSync(path.join(__dirname, './server/.env'), `PORT="${port}"\n`, 'utf8');
+          portNum = Number(port)
+          fs.appendFileSync(path.join(__dirname, './server/.env'), `PORT=${Number(port)}\n`, 'utf8');
         } catch (err) {
-        console.error(err);
+          console.error(err);
         }
         rl.close();
     });
