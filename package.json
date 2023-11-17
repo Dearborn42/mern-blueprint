@@ -5,17 +5,32 @@
   "main": "index.js",
   "scripts": {
     "create_server": "mkdir server && cd server && npm init -y",
-    "server_apps": "touch .env .gitignore",
-    "server_directory": "mkdir config controllers middleware models routes",
-    "node_modules": "echo node_modules >> .gitignore && echo .env >> .gitignore",
-    "env": "node ../envWrite.js",
-    "server_dependencies": "npm install express bcrypt body-parser cors dotenv express-session mongodb mongoose passport passport-local",
-    "create_server_app": "touch app.js && node ../appWrite.js && cd ../",
-    "create_react": "npx create-react-app client",
-    "client_dependancies": "cd client && npm install react-router-dom bootstrap",
-    "place": "cd ./src && rm setupTests.js reportWebVitals.js App.test.js && cd ../public && rm logo192.png logo512.png",
-    "place2": "node ../reactApp.js && cd../src && mkdir components && cd ./components && touch home.js about.js edit.js navbar.js && cd ../../../ && node reactComponents.js",
-    "create-mern-stack": "npm run server && npm run react"
+    "nodeModule": "cd server && touch .gitignore && echo node_modules >> .gitignore && echo .env >> .gitignore",
+    "server_apps": "cd server && touch .env .gitignore app.js",
+    "server_directory": "cd server && mkdir config controllers middleware models routes",
+
+    "create_client": "npx create-react-app client",
+    "cleanup1": "cd ./client/src && rm setupTests.js reportWebVitals.js App.test.js",
+    "cleanup2": "cd ./client/public && rm logo192.png logo512.png",
+    "client_cleanup": "npm run cleanup1 && npm run cleanup2",
+    "client_directory": "cd ./client/src && mkdir components",
+    "client_components": "cd ./client/src/components && touch home.js about.js edit.js navbar.js",
+
+    "client_dependancies": "cd ./client && npm install react-router-dom bootstrap",
+    "server_dependencies": "cd ./server && npm install express bcrypt body-parser cors dotenv express-session mongodb mongoose passport passport-local",
+    
+    "server_start": "npm run create_server && npm run nodeModule",
+    "server_content": "npm run server_apps && npm run server_directory",
+    "client_start": "npm run create_client && npm run client_cleanup",
+    "client_content": "npm run client_directory && npm run client_components",
+
+    "build_server": "npm run server_start && npm run server_content",
+    "build_client": "npm run client_start && npm run client_content",
+    "build": "npm run build_server && npm run build_client",
+    "dependencies": "npm run server_dependencies && npm run client_dependancies",
+
+    
+    "create-mern-stack": "npm run build && npm run dependencies && node index.js"
   },
   "repository": {
     "type": "git",
@@ -32,7 +47,7 @@
     "url": "https://github.com/Dearborn42/mern-blueprint/issues"
   },
   "homepage": "https://github.com/Dearborn42/mern-blueprint#readme",
-  "dependencies": {
-
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
   }
 }
