@@ -4,8 +4,17 @@
   "description": "Basic blueprint for mern stack",
   "main": "index.js",
   "scripts": {
-    "server": "mkdir server && cd server && touch .env && touch .gitignore && echo node_modules >> .gitignore && echo .env >> .gitignore && npm init -y && npm install express bcrypt body-parser cors dotenv express-session mongodb mongoose passport passport-local && touch app.js && mkdir config controllers middleware models routes && node ../envWrite.js && node ../appWrite.js && cd ../",
-    "react": "npx create-react-app client && cd client && npm install react-router-dom bootstrap && node ../reactApp.js && cd ./src && rm setupTests.js reportWebVitals.js App.test.js && cd ../public && rm logo192.png logo512.png && cd../src && mkdir components && cd ./components && touch home.js about.js edit.js navbar.js && cd ../../../ && node reactComponents.js",
+    "create_server": "mkdir server && cd server && npm init -y",
+    "server_apps": "touch .env .gitignore",
+    "server_directory": "mkdir config controllers middleware models routes",
+    "node_modules": "echo node_modules >> .gitignore && echo .env >> .gitignore",
+    "env": "node ../envWrite.js",
+    "server_dependencies": "npm install express bcrypt body-parser cors dotenv express-session mongodb mongoose passport passport-local",
+    "create_server_app": "touch app.js && node ../appWrite.js && cd ../",
+    "create_react": "npx create-react-app client",
+    "client_dependancies": "cd client && npm install react-router-dom bootstrap",
+    "place": "cd ./src && rm setupTests.js reportWebVitals.js App.test.js && cd ../public && rm logo192.png logo512.png",
+    "place2": "node ../reactApp.js && cd../src && mkdir components && cd ./components && touch home.js about.js edit.js navbar.js && cd ../../../ && node reactComponents.js",
     "create-mern-stack": "npm run server && npm run react"
   },
   "repository": {
