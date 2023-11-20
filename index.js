@@ -100,12 +100,12 @@ app.route('/docs').get((req, res) =>{
 });
 
 app.listen(process.env.PORT);`
-        }
-        fs.writeFileSync(path.join(__dirname, './server/app.js'),  code, 'utf8');
-        const package = require('./server/package.json');
+const package = require('./server/package.json');
         package.type = "module"
         const update = JSON.stringify(package, null, 2);
         fs.writeFileSync(path.join(__dirname, './server/package.json'), update, 'utf8');
+        }
+        fs.writeFileSync(path.join(__dirname, './server/app.js'),  code, 'utf8');
     }
     rl.question('Enter your MongoDB connection string: ', (mongoURI) => {
         try {
