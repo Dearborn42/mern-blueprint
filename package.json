@@ -29,7 +29,7 @@
     "build": "npm run build_server && npm run build_client",
     "dependencies": "npm run server_dependencies && npm run client_dependancies",
 
-    
+
     "create-mern-stack": "npm run build && npm run dependencies && node index.js"
   },
   "repository": {
@@ -47,7 +47,5 @@
     "url": "https://github.com/Dearborn42/mern-blueprint/issues"
   },
   "homepage": "https://github.com/Dearborn42/mern-blueprint#readme",
-  "devDependencies": {
-    "npm-run-all": "^4.1.5"
-  }
+  "devDependencies": {}
 }
