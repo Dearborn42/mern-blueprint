@@ -252,14 +252,20 @@ export default function Navbar() {
     navEnum[route]();
   }
  return (
-   <div>
-     <nav className="navbar navbar-expand-lg navbar-light bg-dark w-100">
-        <button onClick={() => nav("landing")}>Landing</button>
-        <button onClick={() => nav("home")}>Home</button>
-        <button onClick={() => nav("about")}>About</button>
-        <button onClick={() => nav("edit")}>Edit</button>
-     </nav>
-   </div>
+    <ul className="flex border-b">
+      <li className="-mb-px mr-1">
+        <button className="bg-white inline-block border-l border-t border-r rounded-t py-2 px-4 text-blue-700 font-semibold" onClick={() => nav("landing")}>Landing</button>
+      </li>
+      <li className="mr-1">
+        <button className="bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold" onClick={() => nav("home")}>Home</button>
+      </li>
+      <li className="mr-1">
+        <button className="bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold" onClick={() => nav("about")}>About</button>
+      </li>
+      <li className="mr-1">
+        <button className="bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold" onClick={() => nav("edit")}>Edit</button>
+      </li>
+    </ul>
  );
 }`;
 
@@ -285,8 +291,34 @@ const about = `export default function About(){
         <div>About Page</div>
     )
 }`
+const index = `/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}`
+const tailwindcss = `@tailwind base;
+@tailwind components;
+@tailwind utilities;
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}`
 
 fs.writeFileSync(path.join(__dirname, './client/src/components/navbar.js'),  nav, 'utf8');
 fs.writeFileSync(path.join(__dirname, './client/src/components/home.js'),  home, 'utf8');
 fs.writeFileSync(path.join(__dirname, './client/src/components/about.js'),  about, 'utf8');
 fs.writeFileSync(path.join(__dirname, './client/src/App.js'),  landing, 'utf8');
+fs.writeFileSync(path.join(__dirname, './client/tailwind.config.js'), index, 'utf8');
+fs.writeFileSync(path.join(__dirname, './client/src/index.css'), tailwindcss, 'utf8');

@@ -14,7 +14,7 @@
     "client_cleanup": "npm run cleanup1 && npm run cleanup2",
     "client_directory": "cd ./client/src && mkdir components",
     "client_components": "cd ./client/src/components && touch home.js about.js edit.js navbar.js",
-    "client_dependancies": "cd ./client && npm install react-router-dom bootstrap",
+    "client_dependancies": "cd ./client && npm install react-router-dom bootstrap tailwindcss && npx tailwindcss init",
     "server_dependencies": "cd ./server && npm install express bcrypt body-parser cors dotenv express-session mongodb mongoose passport passport-local",
     "server_start": "npm run create_server && npm run nodeModule",
     "server_content": "npm run server_apps && npm run server_directory",
