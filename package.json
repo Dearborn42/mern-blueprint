@@ -12,7 +12,7 @@
     "cleanup1": "cd ./client/src && rm setupTests.js reportWebVitals.js App.test.js",
     "cleanup2": "cd ./client/public && rm logo192.png logo512.png",
     "client_cleanup": "npm run cleanup1 && npm run cleanup2",
-    "client_directory": "cd ./client/src && mkdir components",
+    "client_directory": "cd ./client/src && mkdir Components Styles Utils",
     "client_components": "cd ./client/src/components && touch home.js about.js edit.js navbar.js",
     "client_dependancies": "cd ./client && npm install react-router-dom bootstrap tailwindcss && npx tailwindcss init",
     "server_dependencies": "cd ./server && npm install express bcrypt body-parser cors dotenv express-session mongodb mongoose passport passport-local",
