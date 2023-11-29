@@ -23,28 +23,28 @@ To deploy this project run
 ```
 root
 ├── client
-   ├── README.md
-   ├── node_modules
-   ├── package.json
-   ├── package-lock.json
-   ├── .gitignore
-   ├── public
-   │   ├── favicon.ico
-   │   ├── index.html
-   │   ├── robots.txt
-   │   └── manifest.json
-   └── src
-    ├── App.css
-    ├── App.js
-    ├── index.css
-    ├── index.js
-    ├── Styles
-    ├── Utils
-    └── Components
-        ├── about.js
-        ├── edit.js
-        ├── home.js
-        └── navbar.js
+│  ├── README.md
+│  ├── node_modules
+│  ├── package.json
+│  ├── package-lock.json
+│  ├── .gitignore
+│  ├── public
+│  │   ├── favicon.ico
+│  │   ├── index.html
+│  │   ├── robots.txt
+│  │   └── manifest.json
+│  └── src
+│   ├── App.css
+│   ├── App.js
+│   ├── index.css
+│   ├── index.js
+│   ├── Styles
+│   ├── Utils
+│   └── Components
+│       ├── about.js
+│       ├── edit.js
+│       ├── home.js
+│       └── navbar.js
 ├── server
     ├── .env
     ├── .gitignore
