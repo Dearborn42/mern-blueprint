@@ -211,10 +211,10 @@ let code = `import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import About from './Components/about';
-import Edit from './Components/edit';
-import Home from './Components/home';
-import Navbar from './Components/navbar';
+import About from './Components/About';
+import Edit from './Components/Edit';
+import Home from './Components/Home';
+import Navbar from './Components/Navbar';
 import "bootstrap/dist/css/bootstrap.css";
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
