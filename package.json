@@ -26,7 +26,9 @@
     "dependencies": "npm run server_dependencies && npm run client_dependancies",
     "create-mern-stack": "npm run build && npm run dependencies"
   },
-  "bin": "node ./index.js",
+  "bin": {
+    "create-mern-stack": "./index.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Dearborn42/mern-blueprint.git"
@@ -36,7 +38,10 @@
     "stack",
     "blueprint"
   ],
-  "author": "Dearborn42 - amurf26@outlook.com",
+  "author": {
+    "name": "Dearborn42",
+    "email": "amurf26@outlook.com"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Dearborn42/mern-blueprint/issues"
