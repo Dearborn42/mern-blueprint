@@ -15,7 +15,7 @@ Before running the scripts, make sure you have Node.js and npm installed on your
 To deploy this project run
 
 ```bash
-  npm run create-mern-stack
+  npx create-mern-stack
 ```
 
 ## Output
