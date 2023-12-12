@@ -26,9 +26,7 @@
     "dependencies": "npm run server_dependencies && npm run client_dependancies",
     "create-mern-stack": "npm run build && npm run dependencies"
   },
-  "bin": {
-    "create-mern-stack": "node ./index.js"
-  },
+  "bin": "node ./index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Dearborn42/mern-blueprint.git"
