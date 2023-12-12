@@ -2,7 +2,6 @@
   "name": "@dearborn42/mern-blueprint",
   "version": "1.0.0",
   "description": "Basic blueprint for mern stack",
-  "private": true,
   "main": "index.js",
   "scripts": {
     "create_server": "mkdir server && cd server && npm init -y",
