@@ -1,6 +1,6 @@
 {
   "name": "@dearborn42/mern-blueprint",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Basic blueprint for mern stack",
   "main": "index.js",
   "scripts": {
