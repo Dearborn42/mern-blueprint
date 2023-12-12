@@ -100,16 +100,16 @@ app.route('/docs').get((req, res) =>{
 });
 
 app.listen(process.env.PORT);`
-const package = require('../server/package.json');
+const package = require('../../../server/package.json');
         package.type = "module"
         const update = JSON.stringify(package, null, 2);
-        fs.writeFileSync(path.join(__dirname, '../server/package.json'), update, 'utf8');
+        fs.writeFileSync(path.join(__dirname, '../../../server/package.json'), update, 'utf8');
         }
-        fs.writeFileSync(path.join(__dirname, '../server/app.js'),  code, 'utf8');
+        fs.writeFileSync(path.join(__dirname, '../../../server/app.js'),  code, 'utf8');
     }
     rl.question('Enter your MongoDB connection string: ', (mongoURI) => {
         try {
-            fs.writeFileSync(path.join(__dirname, '../server/.env'), `MONGO_URI="${mongoURI}"\n`, 'utf8');
+            fs.writeFileSync(path.join(__dirname, '../../../server/.env'), `MONGO_URI="${mongoURI}"\n`, 'utf8');
         } catch (err) {
             console.error(err);
             rl.close();
@@ -117,7 +117,7 @@ const package = require('../server/package.json');
         }
         rl.question('Enter your session secret key: ', (secretKey) => {
             try {
-                fs.appendFileSync(path.join(__dirname, '../server/.env'), `SECRET_KEY="${secretKey}"\n`, 'utf8');
+                fs.appendFileSync(path.join(__dirname, '../../../server/.env'), `SECRET_KEY="${secretKey}"\n`, 'utf8');
             } catch (err) {
                 console.error(err);
             }
@@ -191,8 +191,8 @@ export default function Edit(){
         </>
     );
 }`;
-                    fs.writeFileSync(path.join(__dirname, '../client/src/components/edit.js'),  edit, 'utf8');
-                    fs.appendFileSync(path.join(__dirname, '../server/.env'), `PORT=${portNum}\n`, 'utf8');
+                    fs.writeFileSync(path.join(__dirname, '../../../client/src/components/edit.js'),  edit, 'utf8');
+                    fs.appendFileSync(path.join(__dirname, '../../../server/.env'), `PORT=${portNum}\n`, 'utf8');
                 } catch (err) {
                     console.error(err);
                 }
@@ -349,12 +349,12 @@ const scripts = [
 runScriptsSequentially(scripts, () => {
   displayMenu();
   askForOption();
-    fs.writeFileSync(path.join(__dirname, '../client/src/index.js'),  reactApp, 'utf8');
-    fs.writeFileSync(path.join(__dirname, '../client/src/Components/Navbar.jsx'),  nav, 'utf8');
-    fs.writeFileSync(path.join(__dirname, '../client/src/Components/Home.jsx'),  home, 'utf8');
-    fs.writeFileSync(path.join(__dirname, '../client/src/Components/About.jsx'),  about, 'utf8');
-    fs.writeFileSync(path.join(__dirname, '../client/src/App.js'),  landing, 'utf8');
-    fs.writeFileSync(path.join(__dirname, '../client/tailwind.config.js'), index, 'utf8');
-    fs.writeFileSync(path.join(__dirname, '../client/src/index.css'), tailwindcss, 'utf8');
+    fs.writeFileSync(path.join(__dirname, '../../../client/src/index.js'),  reactApp, 'utf8');
+    fs.writeFileSync(path.join(__dirname, '../../../client/src/Components/Navbar.jsx'),  nav, 'utf8');
+    fs.writeFileSync(path.join(__dirname, '../../../client/src/Components/Home.jsx'),  home, 'utf8');
+    fs.writeFileSync(path.join(__dirname, '../../../client/src/Components/About.jsx'),  about, 'utf8');
+    fs.writeFileSync(path.join(__dirname, '../../../client/src/App.js'),  landing, 'utf8');
+    fs.writeFileSync(path.join(__dirname, '../../../client/tailwind.config.js'), index, 'utf8');
+    fs.writeFileSync(path.join(__dirname, '../../../client/src/index.css'), tailwindcss, 'utf8');
 });
 
