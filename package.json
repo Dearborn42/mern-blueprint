@@ -23,7 +23,8 @@
     "build_server": "npm run server_start && npm run server_content",
     "build_client": "npm run client_start && npm run client_content",
     "build": "npm run build_server && npm run build_client",
-    "dependencies": "npm run server_dependencies && npm run client_dependancies"
+    "dependencies": "npm run server_dependencies && npm run client_dependancies",
+    "create-mern-stack": "npm run build && npm run dependencies && node ./bin/index.js"
   },
   "bin": {
     "create-mern-stack": "npm run build && npm run dependencies && node ./bin/index.js"
