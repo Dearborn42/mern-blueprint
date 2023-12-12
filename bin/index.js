@@ -191,7 +191,7 @@ export default function Edit(){
         </>
     );
 }`;
-                    fs.writeFileSync(path.join(__dirname, '../../../client/src/components/edit.js'),  edit, 'utf8');
+                    fs.writeFileSync(path.join(__dirname, '../../../client/src/Components/Edit.jsx'),  edit, 'utf8');
                     fs.appendFileSync(path.join(__dirname, '../../../server/.env'), `PORT=${portNum}\n`, 'utf8');
                 } catch (err) {
                     console.error(err);
