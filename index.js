@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+const { exec, spawn } = require('child_process');
 const readline = require('readline');
 const fs = require('fs');
 const path = require('path');
@@ -7,16 +8,13 @@ const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
 });
-
 function displayMenu() {
   console.log('CommonJS ');
   console.log('ESM');
 }
-
 function handleOption(option) {
   return option === "CommonJS" ? true : false
 }
-
 function askForOption() {
   rl.question('Which type of Nodejs do you perfer: ', (choice) => {
     if (choice !== 'CommonJS' && choice !== 'ESM') {
@@ -204,12 +202,7 @@ export default function Edit(){
     });
 });
 }
-
-// Start the options menu
-displayMenu();
-askForOption();
-
-let code = `import React from 'react';
+const reactApp = `import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
@@ -236,8 +229,6 @@ root.render(
     </BrowserRouter>
   </React.StrictMode>
 );`
-
-fs.writeFileSync(path.join(__dirname, './client/src/index.js'),  code, 'utf8');
 
 const nav = `import "bootstrap/dist/css/bootstrap.css";
 import { useNavigate } from "react-router";
@@ -318,9 +309,27 @@ code {
     monospace;
 }`
 
+// Run the npm script
+const child = exec(`npm run create-mern-stack`, (error, stdout, stderr) => {
+  if (error) {
+    console.error(`Error executing npm script: ${error}`);
+    return;
+  }
+  
+});
+
+// Listen for the process to exit
+child.on('exit', (code) => {
+
+
+// Start the options menu
+displayMenu();
+askForOption();
+fs.writeFileSync(path.join(__dirname, './client/src/index.js'),  reactApp, 'utf8');
 fs.writeFileSync(path.join(__dirname, './client/src/components/navbar.js'),  nav, 'utf8');
 fs.writeFileSync(path.join(__dirname, './client/src/components/home.js'),  home, 'utf8');
 fs.writeFileSync(path.join(__dirname, './client/src/components/about.js'),  about, 'utf8');
 fs.writeFileSync(path.join(__dirname, './client/src/App.js'),  landing, 'utf8');
 fs.writeFileSync(path.join(__dirname, './client/tailwind.config.js'), index, 'utf8');
 fs.writeFileSync(path.join(__dirname, './client/src/index.css'), tailwindcss, 'utf8');
+});
