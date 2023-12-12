@@ -27,7 +27,7 @@
     "create-mern-stack": "npm run build && npm run dependencies"
   },
   "bin": {
-    "create-mern-stack": "./index.js"
+    "create-mern-stack": "bin/index.js"
   },
   "repository": {
     "type": "git",
