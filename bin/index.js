@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 
-const { exec, spawn } = require('child_process');
+const { execSync, spawn } = require('child_process');
 const readline = require('readline');
 const fs = require('fs');
 const path = require('path');
@@ -100,16 +100,16 @@ app.route('/docs').get((req, res) =>{
 });
 
 app.listen(process.env.PORT);`
-const package = require('./server/package.json');
+const package = require('../server/package.json');
         package.type = "module"
         const update = JSON.stringify(package, null, 2);
-        fs.writeFileSync(path.join(__dirname, './server/package.json'), update, 'utf8');
+        fs.writeFileSync(path.join(__dirname, '../server/package.json'), update, 'utf8');
         }
-        fs.writeFileSync(path.join(__dirname, './server/app.js'),  code, 'utf8');
+        fs.writeFileSync(path.join(__dirname, '../server/app.js'),  code, 'utf8');
     }
     rl.question('Enter your MongoDB connection string: ', (mongoURI) => {
         try {
-            fs.writeFileSync(path.join(__dirname, './server/.env'), `MONGO_URI="${mongoURI}"\n`, 'utf8');
+            fs.writeFileSync(path.join(__dirname, '../server/.env'), `MONGO_URI="${mongoURI}"\n`, 'utf8');
         } catch (err) {
             console.error(err);
             rl.close();
@@ -117,7 +117,7 @@ const package = require('./server/package.json');
         }
         rl.question('Enter your session secret key: ', (secretKey) => {
             try {
-                fs.appendFileSync(path.join(__dirname, './server/.env'), `SECRET_KEY="${secretKey}"\n`, 'utf8');
+                fs.appendFileSync(path.join(__dirname, '../server/.env'), `SECRET_KEY="${secretKey}"\n`, 'utf8');
             } catch (err) {
                 console.error(err);
             }
@@ -191,8 +191,8 @@ export default function Edit(){
         </>
     );
 }`;
-                    fs.writeFileSync(path.join(__dirname, './client/src/components/edit.js'),  edit, 'utf8');
-                    fs.appendFileSync(path.join(__dirname, './server/.env'), `PORT=${portNum}\n`, 'utf8');
+                    fs.writeFileSync(path.join(__dirname, '../client/src/components/edit.js'),  edit, 'utf8');
+                    fs.appendFileSync(path.join(__dirname, '../server/.env'), `PORT=${portNum}\n`, 'utf8');
                 } catch (err) {
                     console.error(err);
                 }
@@ -309,27 +309,52 @@ code {
     monospace;
 }`
 
-// Run the npm script
-const child = exec(`npm run create-mern-stack`, (error, stdout, stderr) => {
-  if (error) {
-    console.error(`Error executing npm script: ${error}`);
-    return;
+function runScript(command) {
+  try {
+    console.log(`Running: ${command}`);
+    execSync(command, { stdio: 'inherit' });
+  } catch (error) {
+    console.error(`Error running script: ${error.message}`);
+    process.exit(1);
   }
-  
+}
+
+function runScriptsSequentially(scripts, onComplete) {
+  function runNextScript(index) {
+    if (index < scripts.length) {
+      runScript(scripts[index]);
+      runNextScript(index + 1);
+    } else {
+      onComplete();
+    }
+  }
+
+  runNextScript(0);
+}
+
+const scripts = [
+  "mkdir server && cd server && npm init -y",
+  "cd server && touch .gitignore && echo node_modules >> .gitignore && echo .env >> .gitignore",
+  "cd server && touch .env .gitignore app.js",
+  "cd server && mkdir config controllers middleware models routes",
+  "npx create-react-app client",
+  "cd ./client/src && rm setupTests.js reportWebVitals.js App.test.js logo.svg",
+  "cd ./client/public && rm logo192.png logo512.png",
+  "cd ./client/src && mkdir Components Styles Utils",
+  "cd ./client/src/Components && touch Home.jsx About.jsx Edit.jsx Navbar.jsx",
+  "cd ./client && npm install react-router-dom bootstrap tailwindcss && npx tailwindcss init",
+  "cd ./server && npm install express bcrypt body-parser cors dotenv express-session mongodb mongoose passport passport-local",
+];
+
+runScriptsSequentially(scripts, () => {
+  displayMenu();
+  askForOption();
+    fs.writeFileSync(path.join(__dirname, '../client/src/index.js'),  reactApp, 'utf8');
+    fs.writeFileSync(path.join(__dirname, '../client/src/Components/Navbar.jsx'),  nav, 'utf8');
+    fs.writeFileSync(path.join(__dirname, '../client/src/Components/Home.jsx'),  home, 'utf8');
+    fs.writeFileSync(path.join(__dirname, '../client/src/Components/About.jsx'),  about, 'utf8');
+    fs.writeFileSync(path.join(__dirname, '../client/src/App.js'),  landing, 'utf8');
+    fs.writeFileSync(path.join(__dirname, '../client/tailwind.config.js'), index, 'utf8');
+    fs.writeFileSync(path.join(__dirname, '../client/src/index.css'), tailwindcss, 'utf8');
 });
 
-// Listen for the process to exit
-child.on('exit', (code) => {
-
-
-// Start the options menu
-displayMenu();
-askForOption();
-fs.writeFileSync(path.join(__dirname, './client/src/index.js'),  reactApp, 'utf8');
-fs.writeFileSync(path.join(__dirname, './client/src/components/navbar.js'),  nav, 'utf8');
-fs.writeFileSync(path.join(__dirname, './client/src/components/home.js'),  home, 'utf8');
-fs.writeFileSync(path.join(__dirname, './client/src/components/about.js'),  about, 'utf8');
-fs.writeFileSync(path.join(__dirname, './client/src/App.js'),  landing, 'utf8');
-fs.writeFileSync(path.join(__dirname, './client/tailwind.config.js'), index, 'utf8');
-fs.writeFileSync(path.join(__dirname, './client/src/index.css'), tailwindcss, 'utf8');
-});
