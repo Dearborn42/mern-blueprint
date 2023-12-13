@@ -361,7 +361,7 @@ runScriptsSequentially(scripts, () => {
   packageServer.scripts = {
     "start": "nodemon app.js"
   }
-  const updatePackageServer = JSON.stringify(updatePackageServer, null, 2);
+  const updatePackageServer = JSON.stringify(packageServer, null, 2);
   fs.writeFileSync(path.join(__dirname, '../../../server/package.json'), updatePackageServer, 'utf8');
   
 
