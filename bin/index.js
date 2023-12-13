@@ -355,13 +355,13 @@ runScriptsSequentially(scripts, () => {
     "start:frontend": "cd ./client && npm start",
     "start:backend": "cd ./server && npm run start"
   }
-  const updateGlobalPackage = JSON.stringify(package, null, 2);
+  const updateGlobalPackage = JSON.stringify(globalPackage, null, 2);
   fs.writeFileSync(path.join(__dirname, '../../../package.json'), updateGlobalPackage, 'utf8');
   const packageServer = require('../../../server/package.json');
   packageServer.scripts = {
     "start": "nodemon app.js"
   }
-  const updatePackageServer = JSON.stringify(package, null, 2);
+  const updatePackageServer = JSON.stringify(updatePackageServer, null, 2);
   fs.writeFileSync(path.join(__dirname, '../../../server/package.json'), updatePackageServer, 'utf8');
   
 
