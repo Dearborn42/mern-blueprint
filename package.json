@@ -3,29 +3,7 @@
   "version": "1.0.13",
   "description": "Basic blueprint for mern stack",
   "main": "index.js",
-  "scripts": {
-    "create_server": "mkdir server && cd server && npm init -y",
-    "nodeModule": "cd server && touch .gitignore && echo node_modules >> .gitignore && echo .env >> .gitignore",
-    "server_apps": "cd server && touch .env .gitignore app.js",
-    "server_directory": "cd server && mkdir config controllers middleware models routes",
-    "create_client": "npx create-react-app client",
-    "cleanup1": "cd ./client/src && rm setupTests.js reportWebVitals.js App.test.js logo.svg",
-    "cleanup2": "cd ./client/public && rm logo192.png logo512.png",
-    "client_cleanup": "npm run cleanup1 && npm run cleanup2",
-    "client_directory": "cd ./client/src && mkdir Components Styles Utils",
-    "client_components": "cd ./client/src/Components && touch Home.jsx About.jsx Edit.jsx Navbar.jsx",
-    "client_dependancies": "cd ./client && npm install react-router-dom bootstrap tailwindcss && npx tailwindcss init",
-    "server_dependencies": "cd ./server && npm install express bcrypt body-parser cors dotenv express-session mongodb mongoose passport passport-local",
-    "server_start": "npm run create_server && npm run nodeModule",
-    "server_content": "npm run server_apps && npm run server_directory",
-    "client_start": "npm run create_client && npm run client_cleanup",
-    "client_content": "npm run client_directory && npm run client_components",
-    "build_server": "npm run server_start && npm run server_content",
-    "build_client": "npm run client_start && npm run client_content",
-    "build": "npm run build_server && npm run build_client",
-    "dependencies": "npm run server_dependencies && npm run client_dependancies",
-    "create-mern-stack": "npm run build && npm run dependencies"
-  },
+  "scripts": {},
   "bin": {
     "create-mern-stack": "bin/index.js"
   },
@@ -38,14 +16,13 @@
     "stack",
     "blueprint"
   ],
-  "author": {
-    "name": "Dearborn42",
-    "email": "amurf26@outlook.com"
-  },
+  "author": "Dearborn42 <amurf26@outlook.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Dearborn42/mern-blueprint/issues"
   },
   "homepage": "https://github.com/Dearborn42/mern-blueprint#readme",
-  "devDependencies": {}
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
 }

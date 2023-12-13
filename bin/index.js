@@ -333,6 +333,8 @@ function runScriptsSequentially(scripts, onComplete) {
 }
 
 const scripts = [
+  "touch .gitignore && echo node_modules >> .gitignore && echo .env >> .gitignore",
+  "npm init -y && npm install concurrently",
   "mkdir server && cd server && npm init -y",
   "cd server && touch .gitignore && echo node_modules >> .gitignore && echo .env >> .gitignore",
   "cd server && touch .env .gitignore app.js",
@@ -343,10 +345,26 @@ const scripts = [
   "cd ./client/src && mkdir Components Styles Utils",
   "cd ./client/src/Components && touch Home.jsx About.jsx Edit.jsx Navbar.jsx",
   "cd ./client && npm install react-router-dom bootstrap tailwindcss && npx tailwindcss init",
-  "cd ./server && npm install express bcrypt body-parser cors dotenv express-session mongodb mongoose passport passport-local",
+  "cd ./server && npm install express bcrypt body-parser cors dotenv express-session mongodb mongoose passport passport-local nodemon",
 ];
 
 runScriptsSequentially(scripts, () => {
+  const globalPackage = require('../../../package.json');
+  globalPackage.scripts = {
+    "start": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
+    "start:frontend": "cd ./client && npm start",
+    "start:backend": "cd ./server && npm run start"
+  }
+  const updateGlobalPackage = JSON.stringify(package, null, 2);
+  fs.writeFileSync(path.join(__dirname, '../../../package.json'), updateGlobalPackage, 'utf8');
+  const packageServer = require('../../../server/package.json');
+  packageServer.scripts = {
+    "start": "nodemon app.js"
+  }
+  const updatePackageServer = JSON.stringify(package, null, 2);
+  fs.writeFileSync(path.join(__dirname, '../../../server/package.json'), updatePackageServer, 'utf8');
+  
+
   displayMenu();
   askForOption();
     fs.writeFileSync(path.join(__dirname, '../../../client/src/index.js'),  reactApp, 'utf8');
