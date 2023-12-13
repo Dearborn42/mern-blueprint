@@ -349,20 +349,20 @@ const scripts = [
 ];
 
 runScriptsSequentially(scripts, () => {
-  const globalPackage = require('../../package.json');
+  const globalPackage = require('./package.json');
   globalPackage.scripts = {
     "start": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
     "start:frontend": "cd ./client && npm start",
     "start:backend": "cd ./server && npm run start"
   }
   const updateGlobalPackage = JSON.stringify(globalPackage, null, 2);
-  fs.writeFileSync(path.join(__dirname, '../../package.json'), updateGlobalPackage, 'utf8');
-  const packageServer = require('../../../server/package.json');
+  fs.writeFileSync(path.join(__dirname, './package.json'), updateGlobalPackage, 'utf8');
+  const packageServer = require('./server/package.json');
   packageServer.scripts = {
     "start": "nodemon app.js"
   }
   const updatePackageServer = JSON.stringify(updatePackageServer, null, 2);
-  fs.writeFileSync(path.join(__dirname, '../../../server/package.json'), updatePackageServer, 'utf8');
+  fs.writeFileSync(path.join(__dirname, './server/package.json'), updatePackageServer, 'utf8');
   
 
   displayMenu();
