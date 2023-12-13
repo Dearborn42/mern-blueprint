@@ -22,7 +22,5 @@
     "url": "https://github.com/Dearborn42/mern-blueprint/issues"
   },
   "homepage": "https://github.com/Dearborn42/mern-blueprint#readme",
-  "dependencies": {
-    "concurrently": "^8.2.2"
-  }
+  "dependencies": {}
 }
