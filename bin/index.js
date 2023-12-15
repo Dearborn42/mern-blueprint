@@ -309,6 +309,9 @@ code {
     monospace;
 }`
 
+var targtePath = execSync("pwd").toString().trim()
+console.log(targtePath)
+
 function runScript(command) {
   try {
     console.log(`Running: ${command}`);
