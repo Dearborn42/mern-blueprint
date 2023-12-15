@@ -197,6 +197,20 @@ export default function Edit(){
                 } catch (err) {
                     console.error(err);
                 }
+                const globalPackage = require(`${targtePath}/package.json`);
+                globalPackage.scripts = {
+                  "start": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
+                  "start:frontend": "cd ./client && npm start",
+                  "start:backend": "cd ./server && npm run start"
+                }
+                const updateGlobalPackage = JSON.stringify(globalPackage, null, 2);
+                fs.writeFileSync(`${targtePath}/package.json`, updateGlobalPackage, 'utf8');
+                const packageServer = require(`${targtePath}/server/package.json`);
+                packageServer.scripts = {
+                  "start": "nodemon app.js"
+                }
+                const updatePackageServer = JSON.stringify(packageServer, null, 2);
+                fs.writeFileSync(`${targtePath}/server/package.json`, updatePackageServer, 'utf8');
                 rl.close();
             });
         });
@@ -352,21 +366,6 @@ const scripts = [
 runScriptsSequentially(scripts, () => {
   displayMenu();
   askForOption();
-  const globalPackage = require(`${targtePath}/package.json`);
-  globalPackage.scripts = {
-    "start": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
-    "start:frontend": "cd ./client && npm start",
-    "start:backend": "cd ./server && npm run start"
-  }
-  const updateGlobalPackage = JSON.stringify(globalPackage, null, 2);
-  fs.writeFileSync(`${targtePath}/package.json`, updateGlobalPackage, 'utf8');
-  const packageServer = require(`${targtePath}/server/package.json`);
-  packageServer.scripts = {
-    "start": "nodemon app.js"
-  }
-  const updatePackageServer = JSON.stringify(packageServer, null, 2);
-
-  fs.writeFileSync(`${targtePath}/server/package.json`, updatePackageServer, 'utf8');
   fs.writeFileSync(`${targtePath}/client/src/index.js`,  reactApp, 'utf8');
   fs.writeFileSync(`${targtePath}/client/src/Components/Navbar.jsx`,  nav, 'utf8');
   fs.writeFileSync(`${targtePath}/client/src/Components/Home.jsx`,  home, 'utf8');
