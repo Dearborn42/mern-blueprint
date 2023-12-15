@@ -15,6 +15,7 @@ function displayMenu() {
 function handleOption(option) {
   return option === "CommonJS" ? true : false
 }
+var targtePath = execSync("pwd").toString().trim()
 function askForOption() {
   rl.question('Which type of Nodejs do you perfer: ', (choice) => {
     if (choice !== 'CommonJS' && choice !== 'ESM') {
@@ -100,16 +101,16 @@ app.route('/docs').get((req, res) =>{
 });
 
 app.listen(process.env.PORT);`
-const package = require('../../../server/package.json');
+const package = require(`${targtePath}/server/package.json`);
         package.type = "module"
         const update = JSON.stringify(package, null, 2);
-        fs.writeFileSync(path.join(__dirname, '../../../server/package.json'), update, 'utf8');
+        fs.writeFileSync(`${targtePath}/server/package.json`, update, 'utf8');
         }
-        fs.writeFileSync(path.join(__dirname, '../../../server/app.js'),  code, 'utf8');
+        fs.writeFileSync(`${targtePath}/server/app.js`,  code, 'utf8');
     }
     rl.question('Enter your MongoDB connection string: ', (mongoURI) => {
         try {
-            fs.writeFileSync(path.join(__dirname, '../../../server/.env'), `MONGO_URI="${mongoURI}"\n`, 'utf8');
+            fs.writeFileSync(`${targtePath}/server/.env`, `MONGO_URI="${mongoURI}"\n`, 'utf8');
         } catch (err) {
             console.error(err);
             rl.close();
@@ -117,7 +118,7 @@ const package = require('../../../server/package.json');
         }
         rl.question('Enter your session secret key: ', (secretKey) => {
             try {
-                fs.appendFileSync(path.join(__dirname, '../../../server/.env'), `SECRET_KEY="${secretKey}"\n`, 'utf8');
+                fs.appendFileSync(`${targtePath}/server/.env`, `SECRET_KEY="${secretKey}"\n`, 'utf8');
             } catch (err) {
                 console.error(err);
             }
@@ -191,8 +192,8 @@ export default function Edit(){
         </>
     );
 }`;
-                    fs.writeFileSync(path.join(__dirname, '../../../client/src/Components/Edit.jsx'),  edit, 'utf8');
-                    fs.appendFileSync(path.join(__dirname, '../../../server/.env'), `PORT=${portNum}\n`, 'utf8');
+                    fs.writeFileSync(`${targtePath}/client/src/Components/Edit.jsx`,  edit, 'utf8');
+                    fs.appendFileSync(`${targtePath}/server/.env`, `PORT=${portNum}\n`, 'utf8');
                 } catch (err) {
                     console.error(err);
                 }
@@ -309,9 +310,6 @@ code {
     monospace;
 }`
 
-var targtePath = execSync("pwd").toString().trim()
-console.log(targtePath)
-
 function runScript(command) {
   try {
     console.log(`Running: ${command}`);
@@ -352,30 +350,30 @@ const scripts = [
 ];
 
 runScriptsSequentially(scripts, () => {
-  const globalPackage = require('../../../package.json');
+  const globalPackage = require(`${targtePath}/package.json`);
   globalPackage.scripts = {
     "start": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
     "start:frontend": "cd ./client && npm start",
     "start:backend": "cd ./server && npm run start"
   }
   const updateGlobalPackage = JSON.stringify(globalPackage, null, 2);
-  fs.writeFileSync(path.join(__dirname, '../../../package.json'), updateGlobalPackage, 'utf8');
-  const packageServer = require('../../../server/package.json');
+  fs.writeFileSync(`${targtePath}/package.json`, updateGlobalPackage, 'utf8');
+  const packageServer = require(`${targtePath}/server/package.json`);
   packageServer.scripts = {
     "start": "nodemon app.js"
   }
   const updatePackageServer = JSON.stringify(packageServer, null, 2);
-  fs.writeFileSync(path.join(__dirname, '../../../server/package.json'), updatePackageServer, 'utf8');
+  fs.writeFileSync(`${targtePath}/server/package.json`, updatePackageServer, 'utf8');
   
 
   displayMenu();
   askForOption();
-    fs.writeFileSync(path.join(__dirname, '../../../client/src/index.js'),  reactApp, 'utf8');
-    fs.writeFileSync(path.join(__dirname, '../../../client/src/Components/Navbar.jsx'),  nav, 'utf8');
-    fs.writeFileSync(path.join(__dirname, '../../../client/src/Components/Home.jsx'),  home, 'utf8');
-    fs.writeFileSync(path.join(__dirname, '../../../client/src/Components/About.jsx'),  about, 'utf8');
-    fs.writeFileSync(path.join(__dirname, '../../../client/src/App.js'),  landing, 'utf8');
-    fs.writeFileSync(path.join(__dirname, '../../../client/tailwind.config.js'), index, 'utf8');
-    fs.writeFileSync(path.join(__dirname, '../../../client/src/index.css'), tailwindcss, 'utf8');
+    fs.writeFileSync(`${targtePath}/client/src/index.js`,  reactApp, 'utf8');
+    fs.writeFileSync(`${targtePath}/client/src/Components/Navbar.jsx`,  nav, 'utf8');
+    fs.writeFileSync(`${targtePath}/client/src/Components/Home.jsx`,  home, 'utf8');
+    fs.writeFileSync(`${targtePath}/client/src/Components/About.jsx`,  about, 'utf8');
+    fs.writeFileSync(`${targtePath}/client/src/App.js`,  landing, 'utf8');
+    fs.writeFileSync(`${targtePath}/client/tailwind.config.js`, index, 'utf8');
+    fs.writeFileSync(`${targtePath}/client/src/index.css`, tailwindcss, 'utf8');
 });
 
