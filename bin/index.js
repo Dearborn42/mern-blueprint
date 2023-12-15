@@ -350,6 +350,8 @@ const scripts = [
 ];
 
 runScriptsSequentially(scripts, () => {
+  displayMenu();
+  askForOption();
   const globalPackage = require(`${targtePath}/package.json`);
   globalPackage.scripts = {
     "start": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
@@ -363,17 +365,14 @@ runScriptsSequentially(scripts, () => {
     "start": "nodemon app.js"
   }
   const updatePackageServer = JSON.stringify(packageServer, null, 2);
-  fs.writeFileSync(`${targtePath}/server/package.json`, updatePackageServer, 'utf8');
-  
 
-  displayMenu();
-  askForOption();
-    fs.writeFileSync(`${targtePath}/client/src/index.js`,  reactApp, 'utf8');
-    fs.writeFileSync(`${targtePath}/client/src/Components/Navbar.jsx`,  nav, 'utf8');
-    fs.writeFileSync(`${targtePath}/client/src/Components/Home.jsx`,  home, 'utf8');
-    fs.writeFileSync(`${targtePath}/client/src/Components/About.jsx`,  about, 'utf8');
-    fs.writeFileSync(`${targtePath}/client/src/App.js`,  landing, 'utf8');
-    fs.writeFileSync(`${targtePath}/client/tailwind.config.js`, index, 'utf8');
-    fs.writeFileSync(`${targtePath}/client/src/index.css`, tailwindcss, 'utf8');
+  fs.writeFileSync(`${targtePath}/server/package.json`, updatePackageServer, 'utf8');
+  fs.writeFileSync(`${targtePath}/client/src/index.js`,  reactApp, 'utf8');
+  fs.writeFileSync(`${targtePath}/client/src/Components/Navbar.jsx`,  nav, 'utf8');
+  fs.writeFileSync(`${targtePath}/client/src/Components/Home.jsx`,  home, 'utf8');
+  fs.writeFileSync(`${targtePath}/client/src/Components/About.jsx`,  about, 'utf8');
+  fs.writeFileSync(`${targtePath}/client/src/App.js`,  landing, 'utf8');
+  fs.writeFileSync(`${targtePath}/client/tailwind.config.js`, index, 'utf8');
+  fs.writeFileSync(`${targtePath}/client/src/index.css`, tailwindcss, 'utf8');
 });
 
