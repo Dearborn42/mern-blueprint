@@ -12,6 +12,9 @@ function displayMenu() {
   console.log('CommonJS ');
   console.log('ESM');
 }
+
+var getPath = (a, b) => path.join(a, b);
+var targtePath = execSync("cd").toString().trim();
 var handleOption = (option) => option === "CommonJS" ? true : false
 function askForOption() {
   rl.question('Which type of Nodejs do you perfer: ', (choice) => {
@@ -20,6 +23,9 @@ function askForOption() {
       askForOption();
     }else{
         var code;
+        var auth;
+        var login;
+        var passportSetup;
         if(handleOption(choice)){
             code = `const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -28,22 +34,29 @@ const dotenv = require('dotenv');
 const session = require('express-session');
 const mongoose = require('mongoose');
 const passport = require('passport');
+const login = require('./middleware/login.js');
+const passportSetup = require('./config/passportSetup.js');
+const isAuthenticated = require('./middleware/auth.js');
 const path = require('path');
 dotenv.config();
 mongoose.connect(process.env.MONGO_URI);
+passportSetup(passport)
 
 
 const app = express();
-app.use(cors());
+app.use(session({secret: process.env.SECRET_KEY, resave: false, saveUninitialized: true,}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false, limit: 100000, parameterLimit: 20}))
-app.use(session({secret: process.env.SECRET_KEY, resave: false, saveUninitialized: true,}));
 
 app.route('/').get((req, res) =>{
     res.send("Welcome");
 });
+app.post("/login", login);
 app.route('/docs').get((req, res) =>{
     // Import your mongoose model
 }).post((req, res) =>{
@@ -58,6 +71,44 @@ app.route('/docs').get((req, res) =>{
 });
 
 app.listen(process.env.PORT);`
+            login = `const passport = require('passport');
+
+function login(req, res) {
+  passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/login'
+  })(req, res);
+}
+
+module.exports = login;`
+            auth = `function isAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) return next();
+  return res.redirect('/');
+}
+
+module.exports = isAuthenticated;`
+            passportSetup = `const LocalStrategy = require('passport-local').Strategy;
+// const YourModel = require('./your-path');
+
+module.exports = function(passport) {
+  passport.use(new LocalStrategy(
+    { usernameField: 'email', passwordField: 'password', session: true, passReqToCallback: false },
+    async (email, password, done) => {
+      // your login logic
+      // return done(*error*, *account found*, *option information*);
+    }
+  ));
+
+  passport.serializeUser((user, done) => {
+    // done(null, *own unique identifier*);
+  });
+
+  // passport.deserializeUser((*identifier*, done) => {
+    // YourModel.findOne({*identifier*}).then((err, user) => {
+      // done(user, err);
+    // });
+  // });
+};`
         }else{
             code = `import bodyParser from 'body-parser';
 import cors from 'cors'
@@ -68,22 +119,28 @@ import mongoose from 'mongoose';
 import passport from 'passport';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import login from './middleware/login.js';
+import passportSetup from './config/passportSetup.js';
+import isAuthenticated from './middleware/auth.js';
 dotenv.config();
 mongoose.connect(process.env.MONGO_URI);
-
+passportSetup(passport)
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
-app.use(cors());
+app.use(passport.initialize());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false, limit: 100000, parameterLimit: 20}))
 app.use(session({secret: process.env.SECRET_KEY, resave: false, saveUninitialized: true,}));
+app.use(passport.session());
+app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 
 app.route('/').get((req, res) =>{
     res.send("Welcome");
 })
+app.post("/login", login);
 app.route('/docs').get((req, res) =>{
     // Import your mongoose model
 }).post((req, res) =>{
@@ -98,16 +155,53 @@ app.route('/docs').get((req, res) =>{
 });
 
 app.listen(process.env.PORT);`
-const package = require(`${targtePath}/server/package.json`);
-        package.type = "module"
-        const update = JSON.stringify(package, null, 2);
-        fs.writeFileSync(`${targtePath}/server/package.json`, update, 'utf8');
+            login = `import passport from 'passport';
+
+export default function login(req, res){
+  passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/login'
+  })(req, res);
+}
+` 
+          auth = `export default function isAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) return next();
+  return res.redirect('/');
+}`
+            passportSetup = `import  {Strategy as LocalStrategy} from 'passport-local'
+// import *Mongoose modle* from './your-path';
+
+export default (passport) => {
+  passport.use(new LocalStrategy(
+    {usernameField : 'email', passwordField: 'password', session: true, passReqToCallback: false}, 
+    async (email, password, done)=> { 
+      // your login logic
+      // return done(*error*, *account found*, *option information*);
+    })
+  )
+  passport.serializeUser((user, done) => {
+    // done(null, *own unique identifier*);
+  });
+      
+  // passport.deserializeUser((*identifier*, done) => {
+    // *Mongoose modle*.findOne({*identifier*}).then((err, user) => {
+      // done(user, err);
+    // })
+  // }); 
+}`
+          const package = require(getPath(targtePath, "./server/package.json"));
+          package.type = "module"
+          const update = JSON.stringify(package, null, 2);
+          fs.writeFileSync(getPath(targtePath, `./server/package.json`), update, 'utf8');
         }
-        fs.writeFileSync(`${targtePath}/server/app.js`,  code, 'utf8');
+        fs.writeFileSync(getPath(targtePath,`./server/app.js`),  code, 'utf8');
+        fs.writeFileSync(getPath(targtePath,`./server/middleware/auth.js`), auth, 'utf8');
+        fs.writeFileSync(getPath(targtePath,`./server/middleware/login.js`), login, 'utf8');
+        fs.writeFileSync(getPath(targtePath,`./server/config/passportSetup.js`), passportSetup, 'utf8');
     }
     rl.question('Enter your MongoDB connection string: ', (mongoURI) => {
         try {
-            fs.writeFileSync(`${targtePath}/server/.env`, `MONGO_URI="${mongoURI}"\n`, 'utf8');
+            fs.writeFileSync(getPath(targtePath,`./server/.env`), `MONGO_URI="${mongoURI}"\n`, 'utf8');
         } catch (err) {
             console.error(err);
             rl.close();
@@ -115,7 +209,7 @@ const package = require(`${targtePath}/server/package.json`);
         }
         rl.question('Enter your session secret key: ', (secretKey) => {
             try {
-                fs.appendFileSync(`${targtePath}/server/.env`, `SECRET_KEY="${secretKey}"\n`, 'utf8');
+                fs.appendFileSync(getPath(targtePath,`./server/.env`), `SECRET_KEY="${secretKey}"\n`, 'utf8');
             } catch (err) {
                 console.error(err);
             }
@@ -136,16 +230,19 @@ export default function Edit(){
         const update = {...form}
         const getData = await fetch("http://localhost:${portNum}/docs", {
             method: "GET",
-            headers: { "Content-Type": "application/json" }
+            headers: { "Content-Type": "application/json" },
+            credentials: 'include',
         })
         //const postData = await fetch("http://localhost:${portNum}/docs", {
         //    method: "POST",
         //    headers: { "Content-Type": "application/json" },
+        //    credentials: 'include',
         //    body: JSON.stringify(update)
         //})
         //const putData = await fetch("http://localhost:${portNum}/docs", {
         //    method: "PUT",
         //    headers: { "Content-Type": "application/json" },
+        //    credentials: 'include',
         //    body: JSON.stringify(update)
         //})
         updateForm({name: "",age: "",course: "",})
@@ -189,8 +286,8 @@ export default function Edit(){
         </>
     );
 }`;
-                    fs.writeFileSync(`${targtePath}/client/src/Components/Edit.jsx`,  edit, 'utf8');
-                    fs.appendFileSync(`${targtePath}/server/.env`, `PORT=${portNum}\n`, 'utf8');
+                    fs.writeFileSync(getPath(targtePath,`./client/src/Components/Edit.jsx`),  edit, 'utf8');
+                    fs.appendFileSync(getPath(targtePath,`./server/.env`), `PORT=${portNum}\n`, 'utf8');
                 } catch (err) {
                     console.error(err);
                 }
@@ -216,6 +313,7 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <div>
+      {/* should remove Navbar when you have your login implemented  */}
         <Navbar />
         <Routes>
           <Route path="/" exact Component={App} />
@@ -234,7 +332,6 @@ export default function Navbar() {
   const navigate = useNavigate();
   const navEnum = {
     "home": () => navigate("/home"),
-    "landing": () => navigate("/"),
     "about": () => navigate("/about"),
     "edit": () => navigate("/edit"),
   };
@@ -244,9 +341,6 @@ export default function Navbar() {
   }
  return (
     <ul className="flex border-b">
-      <li className="-mb-px mr-1">
-        <button className="bg-white inline-block border-l border-t border-r rounded-t py-2 px-4 text-blue-700 font-semibold" onClick={() => nav("landing")}>Landing</button>
-      </li>
       <li className="mr-1">
         <button className="bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold" onClick={() => nav("home")}>Home</button>
       </li>
@@ -261,11 +355,63 @@ export default function Navbar() {
 }`;
 
 const landing = `import './App.css';
+import { useState } from "react";
+import { useNavigate } from "react-router";
+
 export default function App() {
+  const [form, setForm] = useState({email: "", password: ""});
+  function updateForm(value) {
+      return setForm((prev) => {
+          return { ...prev, ...value };
+      });
+  }
+  const navigate = useNavigate();
+  async function fetchFunction(e){
+    e.preventDefault();
+    const getData = await fetch("http://localhost:5000/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: 'include',
+        body: JSON.stringify({...form})
+    })
+    const pass = await getData.json();
+    if (pass.success){
+      updateForm({email: "", password: ""})
+      navigate("/home");
+    }else{
+        alert("Error");
+    }
+  }
   return (
     <div className="App">
       <header className="App-header">
-        <div>Landing Page</div>
+        <div className="mx-auto w-25 h-50 d-flex flex-column border border-primary p-3">
+            <form onSubmit={fetchFunction} className="mt-2">
+                <input
+                    type="text"
+                    className="form-control"
+                    id="email"
+                    value={form.email}
+                    placeholder="Enter email"
+                    onChange={(e) => updateForm({ email: e.target.value })}
+                />
+                <br />
+                <input
+                    type="password"
+                    className="form-control"
+                    id="password"
+                    value={form.password}
+                    placeholder="Enter password"
+                    onChange={(e) => updateForm({ password: e.target.value })}
+                />
+                <div className="d-flex justify-content-center w-100 mt-2 flex-col">
+                    <button type="submit">Login</button>
+                    <br />
+                    <button type="button" onClick={() => navigate("/create-account")}>Sign Up</button>
+                </div>
+
+            </form>
+        </div>
       </header>
     </div>
   );
@@ -337,6 +483,8 @@ const scripts = [
   "cd server && touch .gitignore && echo node_modules >> .gitignore && echo .env >> .gitignore",
   "cd server && touch .env .gitignore app.js",
   "cd server && mkdir config controllers middleware models routes",
+  "cd server/middleware && touch auth.js login.js",
+  "cd server/config && touch passportSetup.js",
   "npx create-react-app client",
   "cd ./client/src && rm setupTests.js reportWebVitals.js App.test.js logo.svg",
   "cd ./client/public && rm logo192.png logo512.png",
@@ -346,31 +494,28 @@ const scripts = [
   "cd ./server && npm install express bcrypt body-parser cors dotenv express-session mongodb mongoose passport passport-local nodemon",
 ];
 
+
 runScriptsSequentially(scripts, () => {
-  var targtePath = execSync("pwd").toString().trim()
-  console.log(targtePath);
   displayMenu();
   askForOption();
-  fs.writeFileSync(`${targtePath}/client/src/index.js`,  reactApp, 'utf8');
-  fs.writeFileSync(`${targtePath}/client/src/Components/Navbar.jsx`,  nav, 'utf8');
-  fs.writeFileSync(`${targtePath}/client/src/Components/Home.jsx`,  home, 'utf8');
-  fs.writeFileSync(`${targtePath}/client/src/Components/About.jsx`,  about, 'utf8');
-  fs.writeFileSync(`${targtePath}/client/src/App.js`,  landing, 'utf8');
-  fs.writeFileSync(`${targtePath}/client/tailwind.config.js`, index, 'utf8');
-  fs.writeFileSync(`${targtePath}/client/src/index.css`, tailwindcss, 'utf8');
-  const globalPackage = require(path.resolve(targtePath, `./package.json`));
+  fs.writeFileSync(getPath(targtePath,"./client/src/index.js"),  reactApp, 'utf8');
+  fs.writeFileSync(getPath(targtePath,"./client/src/Components/Navbar.jsx"),  nav, 'utf8');
+  fs.writeFileSync(getPath(targtePath,"./client/src/Components/Home.jsx"),  home, 'utf8');
+  fs.writeFileSync(getPath(targtePath,"./client/src/Components/About.jsx"),  about, 'utf8');
+  fs.writeFileSync(getPath(targtePath, "/client/src/App.js"),  landing, 'utf8');
+  fs.writeFileSync(getPath(targtePath,"client/tailwind.config.js"), index, 'utf8');
+  fs.writeFileSync(getPath(targtePath,"/client/src/index.css"), tailwindcss, 'utf8');
+  const globalPackage = require(getPath(targtePath,"./package.json"));
   globalPackage.scripts = {
     "start": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
     "start:frontend": "cd ./client && npm start",
     "start:backend": "cd ./server && npm run start"
   }
   const updateGlobalPackage = JSON.stringify(globalPackage, null, 2);
-  fs.writeFileSync(path.resolve(targtePath, `./package.json`), updateGlobalPackage, 'utf8');
-  const packageServer = require(path.resolve(targtePath, `./server/package.json`));
-  packageServer.scripts = {
-    "start": "nodemon app.js"
-  }
+  fs.writeFileSync(getPath(targtePath,"./package.json"), updateGlobalPackage, 'utf8');
+  const packageServer = require(getPath(targtePath,"./server/package.json"));
+  packageServer.scripts = {"start": "nodemon app.js"}
   const updatePackageServer = JSON.stringify(packageServer, null, 2);
-  fs.writeFileSync(path.resolve(targtePath, `./server/package.json`), updatePackageServer, 'utf8');
+  fs.writeFileSync(getPath(targtePath,"./server/package.json"), updatePackageServer, 'utf8');
 });
 
