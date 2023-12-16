@@ -1,6 +1,6 @@
 {
   "name": "create-mern-stack",
-  "version": "1.0.25",
+  "version": "1.0.26",
   "description": "Basic blueprint for mern stack",
   "main": "index.js",
   "scripts": {},
