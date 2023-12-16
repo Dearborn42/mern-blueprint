@@ -12,10 +12,7 @@ function displayMenu() {
   console.log('CommonJS ');
   console.log('ESM');
 }
-function handleOption(option) {
-  return option === "CommonJS" ? true : false
-}
-var targtePath = execSync("pwd").toString().trim()
+var handleOption = (option) => option === "CommonJS" ? true : false
 function askForOption() {
   rl.question('Which type of Nodejs do you perfer: ', (choice) => {
     if (choice !== 'CommonJS' && choice !== 'ESM') {
@@ -350,6 +347,17 @@ const scripts = [
 ];
 
 runScriptsSequentially(scripts, () => {
+  var targtePath = execSync("pwd").toString().trim()
+  console.log(targtePath);
+  displayMenu();
+  askForOption();
+  fs.writeFileSync(`${targtePath}/client/src/index.js`,  reactApp, 'utf8');
+  fs.writeFileSync(`${targtePath}/client/src/Components/Navbar.jsx`,  nav, 'utf8');
+  fs.writeFileSync(`${targtePath}/client/src/Components/Home.jsx`,  home, 'utf8');
+  fs.writeFileSync(`${targtePath}/client/src/Components/About.jsx`,  about, 'utf8');
+  fs.writeFileSync(`${targtePath}/client/src/App.js`,  landing, 'utf8');
+  fs.writeFileSync(`${targtePath}/client/tailwind.config.js`, index, 'utf8');
+  fs.writeFileSync(`${targtePath}/client/src/index.css`, tailwindcss, 'utf8');
   const globalPackage = require(path.resolve(targtePath, `./package.json`));
   globalPackage.scripts = {
     "start": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
@@ -364,14 +372,5 @@ runScriptsSequentially(scripts, () => {
   }
   const updatePackageServer = JSON.stringify(packageServer, null, 2);
   fs.writeFileSync(path.resolve(targtePath, `./server/package.json`), updatePackageServer, 'utf8');
-  displayMenu();
-  askForOption();
-  fs.writeFileSync(`${targtePath}/client/src/index.js`,  reactApp, 'utf8');
-  fs.writeFileSync(`${targtePath}/client/src/Components/Navbar.jsx`,  nav, 'utf8');
-  fs.writeFileSync(`${targtePath}/client/src/Components/Home.jsx`,  home, 'utf8');
-  fs.writeFileSync(`${targtePath}/client/src/Components/About.jsx`,  about, 'utf8');
-  fs.writeFileSync(`${targtePath}/client/src/App.js`,  landing, 'utf8');
-  fs.writeFileSync(`${targtePath}/client/tailwind.config.js`, index, 'utf8');
-  fs.writeFileSync(`${targtePath}/client/src/index.css`, tailwindcss, 'utf8');
 });
 
