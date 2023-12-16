@@ -84,26 +84,8 @@ Server
 
 ## Development
 
-_In root of dir, open two terminals_
+_In root of dir_
 
 ```
-cd client
-```
-
-then
-
-```
-npm start
-```
-
-_In other terminal_
-
-```
-cd server
-```
-
-then
-
-```
-node app.js
+npm run start
 ```
