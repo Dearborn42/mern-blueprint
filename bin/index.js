@@ -443,7 +443,6 @@ export default function Edit(){
           "cd server && touch .env .gitignore app.js",
           "cd server && mkdir controllers middleware models routes",
           "cd server/middleware && touch auth.js login.js",
-          "cd server/config && touch passportSetup.js",
           "npx create-react-app client",
           "cd ./client/src && rm setupTests.js reportWebVitals.js App.test.js logo.svg",
           "cd ./client/public && rm logo192.png logo512.png",
@@ -462,7 +461,6 @@ export default function Edit(){
           "cd server && touch .env .gitignore app.js",
           "cd server && mkdir controllers middleware models routes",
           "cd server/middleware && touch auth.js login.js",
-          "cd server/config && touch passportSetup.js",
           "npx create-next-app@latest client",
           "cd ./server && npm install express bcrypt body-parser cors dotenv express-session mongodb mongoose passport passport-local nodemon",
         ];
