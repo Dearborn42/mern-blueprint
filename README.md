@@ -21,6 +21,7 @@ To deploy this project run
 ## Output
 
 ```
+option 1
 root
 ├── client
 │  ├── README.md
@@ -45,6 +46,45 @@ root
 │       ├── edit.js
 │       ├── home.js
 │       └── navbar.js
+├── server
+    ├── .env
+    ├── .gitignore
+    ├── node_moduels
+    ├── app.js
+    ├── package.json
+    ├── package-lock.json
+    ├── config
+    ├── controllers
+    ├── middleware
+    ├── models
+    └── routes
+
+option 2
+root
+├── client
+│  ├── README.md
+│  ├── node_modules
+│  ├── package.json
+│  ├── package-lock.json
+│  ├── .gitignore
+│  ├── jsconfig.json
+│  ├── next.config.mjs
+│  ├── src / or not depending on choice
+│  ├── public
+│  ├── app
+│  │   ├── about\page.jsx
+│  │   ├── contact\page.jsx
+│  │   ├── login\page.jsx
+│  │   ├── signup\page.jsx
+│  │   ├── favicon.ico
+│  │   ├── gloabl.css
+│  │   ├── layout.js
+│  │   ├── page.jsx
+│  │   └── page.module.css
+│  ├── Components
+│  │   ├── Navbar.jsx
+│  │   └── ServerFunctions.js
+│  └── middleware.js
 ├── server
     ├── .env
     ├── .gitignore
