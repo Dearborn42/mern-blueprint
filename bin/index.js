@@ -69,7 +69,7 @@ export default function Navbar() {
  );
 }`;
 
-const landing = `import './App.css';
+var landing = `import './App.css';
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
@@ -167,6 +167,144 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }`
+const middleware = `import { NextResponse } from "next/server";
+
+export function middleware(req){
+  if(req.nextUrl.pathname === "/") return NextResponse.next();
+  
+  // Implement checks here, currently middleware will check every path including the root path.
+
+  return NextResponse.next();
+}
+
+
+export const config = {
+    matcher: ["/:path*"]
+}
+`
+const loginPage = `"use client";
+import * as React from "react";
+import { useState } from "react";
+import { login } from '@/Components/ServerFunctions';
+
+export default function LoginPage(){
+    const [form, setForm] = useState({ email: "", password: "" });
+    const handleForm = (field, value) => setForm((prev) => { return { ...prev, [field]: value } });
+    function handleSubmit(e){
+        e.preventDefault();
+        login(form).then(result => {
+            if(result){
+                alert("Invalid Email or Password")
+            }
+        });
+    }
+    return (
+        <form onSubmit={handleSubmit} className="flex flex-col items-center">
+            <input
+                className="text-black" 
+                type="email"
+                autoComplete="true"
+                name="email"
+                id="email"
+                placeholder="Enter your email address"
+                value={form.email}
+                required
+                onChange={(e) => handleForm("email", e.target.value)}
+            />
+            <input
+                className="text-black"
+                type="password"
+                autoComplete="true"
+                name="password"
+                id="password"
+                placeholder="Enter your password"
+                value={form.password}
+                required
+                onChange={(e) => handleForm("password", e.target.value)}
+            />
+            <button type="submit">Login</button>
+        </form>
+    )
+}`
+const signUpPage = `"use client";
+import * as React from "react";
+import { useState } from "react";
+import { signup } from '@/Components/ServerFunctions';
+
+export default function SignUpPage(){
+    const [form, setForm] = useState({ email: "", password: "" });
+    const handleForm = (field, value) => setForm((prev) => { return { ...prev, [field]: value } });
+    function handleSubmit(e){
+        e.preventDefault();
+        signup(form).then(result => {
+            if(result){
+                alert("Invalid Email or Password")
+            }
+        });
+    }
+    return (
+        <form onSubmit={handleSubmit} className="flex flex-col items-center">
+            <input
+                className="text-black" 
+                type="email"
+                autoComplete="true"
+                name="email"
+                id="email"
+                placeholder="Enter your email address"
+                value={form.email}
+                required
+                onChange={(e) => handleForm("email", e.target.value)}
+            />
+            <input
+                className="text-black"
+                type="password"
+                autoComplete="true"
+                name="password"
+                id="password"
+                placeholder="Enter your password"
+                value={form.password}
+                required
+                onChange={(e) => handleForm("password", e.target.value)}
+            />
+            <button type="submit">Login</button>
+        </form>
+    )
+}`
+const serverFunctions = `'use server';
+import { redirect } from "next/navigation";
+import { cookies } from 'next/headers';
+
+export async function login(formData){
+    const { email, name } = formData;
+    const loginRequest = await fetch('http://localhost:/*enter your backend portnumber*/ /login', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        next: {revalidate: 1},
+        body: JSON.stringify({name, email})
+    }) 
+    const response = await loginRequest.json();
+    console.log(response);
+    if(response.success){
+        cookies().set("access", true, {maxAge: 60*60*1});
+        redirect('/home');
+    }else{
+        
+    }
+}
+export async function signup(formData){
+    const signup_request = await fetch('http://localhost:/*enter your backend portnumber*/ /signup', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        next: {revalidate: 1},
+        body: JSON.stringify(formData)
+    })
+    const response = await signup_request.json();
+    if(response.success){
+        cookies().set("access", true, {maxAge: 60*60*1});
+        console.log(cookies().getAll());
+        redirect('/home');
+    }
+}`
 
 var getPath = (a, b) => path.join(a, b);
 var targtePath = execSync("cd").toString().trim();
@@ -174,6 +312,7 @@ var handleOption = (option) => option === "CommonJS" ? true : false;
 var scripts = [];
 var scripts2 = [];
 var ClientOption;
+var portNum;
 function askForOption(){
   rl.question('Which type of Nodejs do you perfer: ', (choice) => {
     if (choice !== 'CommonJS' && choice !== 'ESM') {
@@ -192,7 +331,7 @@ const session = require('express-session');
 const mongoose = require('mongoose');
 const path = require('path');
 const { fileURLToPath } = require('url');
-const login = require('./middleware/login.js');
+const {login, signup} = require('./middleware/login.js');
 
 dotenv.config();
 
@@ -213,6 +352,7 @@ app.route('/').get((req, res) =>{
     res.send("Welcome");
 });
 app.post("/login", login);
+app.post("/signup", signup)
 app.route('/docs').get((req, res) =>{
     // Import your mongoose model
 }).post((req, res) =>{
@@ -229,11 +369,24 @@ app.route('/docs').get((req, res) =>{
 app.listen(process.env.PORT);`
             login = `const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
-const model = require('../models/filename'); // Adjust according to the actual model and filename
+// const model = require('../models/filename'); 
+// Adjust according to the actual model and filename
 
 dotenv.config();
+async function signup(req, res){
+  const {email, password} = req.body;
+    try {
+      // const user = new (Model)({email, password});
+      // await user.validate();
+      // await user.save();
+      const token = jwt.sign({ user }, process.env.SECRET_KEY, { expiresIn: "1h" });
+      return res.status(200).json({ success: true, token });
+    } catch (error) {
+        return res.status(500).json({success: false, message: error.message});
+    }
+}
 
-module.exports = async function login(req, res) {
+async function login(req, res) {
   const { email, password } = req.body;
   try {
     const user = await model.findOne({ email });
@@ -247,6 +400,8 @@ module.exports = async function login(req, res) {
     return res.status(500).json({ success: false, message: error.message });
   }
 }
+
+module.exports = {login, signup}
 `
             auth = `function isAuthenticated(req, res, next) {
   if (req.headers.access) {
@@ -266,7 +421,7 @@ import session from 'express-session';
 import mongoose from 'mongoose';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import login from './middleware/login.js';
+import {login, signup} from './middleware/login.js';
 
 dotenv.config();
 
@@ -283,6 +438,7 @@ app.route('/').get((req, res) =>{
     res.send("Welcome");
 })
 app.post("/login", login);
+app.post("/signup", signup)
 app.route('/docs').get((req, res) =>{
     // Import your mongoose model
 }).post((req, res) =>{
@@ -299,13 +455,13 @@ app.route('/docs').get((req, res) =>{
 app.listen(process.env.PORT);`
             login = `import jwt from "jsonwebtoken"
 import dotenv from 'dotenv';
-import (model) from '../models/(filename).js';
+// import (model) from '../models/(filename).js';
 dotenv.config();
 
-export default async function login(req, res) {
+export async function login(req, res) {
   const {email, password} = req.body;
   try {
-    const user = await Account.findOne({email});
+    // const user = await (model).findOne({email});
     if(!user)
       return res.status(400).json({success: false, message: "Wrong email or password"});
     if(!user.validPassword(password))
@@ -315,6 +471,19 @@ export default async function login(req, res) {
   } catch (error) {
     return res.status(500).json({success: false, message: error.message});
   }
+}
+
+export async function signup(req, res){
+  const {email, password} = req.body;
+    try {
+      // const user = new (Model)({email, password});
+      // await user.validate();
+      // await user.save();
+      const token = jwt.sign({ user }, process.env.SECRET_KEY, { expiresIn: "1h" });
+      return res.status(200).json({ success: true, token });
+    } catch (error) {
+        return res.status(500).json({success: false, message: error.message});
+    }
 }
 ` 
           auth = `export default function isAuthenticated(req, res, next) {
@@ -348,78 +517,7 @@ export default async function login(req, res) {
             }
             rl.question('Enter your port number: ', (port) => {
                 try {
-                    portNum = Number(port)
-                    const edit = `import { useState } from "react";
-import 'bootstrap/dist/css/bootstrap.min.css';
-export default function Edit(){
-    const [form, setForm] = useState({name: "", age: "", course: ""});
-    function updateForm(value) {
-        return setForm((prev) => {
-            return { ...prev, ...value };
-        });
-    }
-    async function fetchFunction(e){
-        e.preventDefault();
-        const update = {...form}
-        const getData = await fetch("http://localhost:${portNum}/docs", {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
-            credentials: 'include',
-        })
-        //const postData = await fetch("http://localhost:${portNum}/docs", {
-        //    method: "POST",
-        //    headers: { "Content-Type": "application/json" },
-        //    credentials: 'include',
-        //    body: JSON.stringify(update)
-        //})
-        //const putData = await fetch("http://localhost:${portNum}/docs", {
-        //    method: "PUT",
-        //    headers: { "Content-Type": "application/json" },
-        //    credentials: 'include',
-        //    body: JSON.stringify(update)
-        //})
-        updateForm({name: "",age: "",course: "",})
-    }
-    return(
-        <>
-        <div className="mx-auto w-25 h-50 d-flex flex-column border border-primary p-3">
-            <form onSubmit={fetchFunction} className="mt-2">
-                <input
-                    type="text"
-                    className="form-control"
-                    id="name"
-                    value={form.name}
-                    placeholder="Enter student name"
-                    maxLength="15"
-                    onChange={(e) => updateForm({ name: e.target.value })}
-                />
-                <br />
-                <input
-                    type="text"
-                    className="form-control"
-                    id="age"
-                    value={form.age}
-                    placeholder="Enter student age"
-                    onChange={(e) => updateForm({ age: e.target.value })}
-                />
-                <br />
-                <input
-                    type="text"
-                    className="form-control"
-                    id="course"
-                    value={form.course}
-                    placeholder="Enter student course"
-                    onChange={(e) => updateForm({ course: e.target.value })}
-                />
-                <div className="d-flex justify-content-center w-100 mt-2">
-                    <button type="submit">Submit</button>
-                </div>
-            </form>
-        </div>
-        </>
-    );
-}`;
-                    fs.writeFileSync(getPath(targtePath,`./client/src/Components/Edit.jsx`),  edit, 'utf8');
+                    portNum = Number(port);
                     fs.appendFileSync(getPath(targtePath,`./server/.env`), `PORT=${portNum}\n`, 'utf8');
                 } catch (err) {
                     console.error(err);
@@ -436,10 +534,10 @@ export default function Edit(){
       if(choice === "1"){
         ClientOption = 1;
         scripts =[
-          "touch .gitignore && echo node_modules >> .gitignore && echo .env >> .gitignore",
+          "touch .gitignore && echo ./node_modules >> .gitignore && echo .env >> .gitignore",
           "npm init -y && npm install concurrently",
           "mkdir server && cd server && npm init -y",
-          "cd server && touch .gitignore && echo node_modules >> .gitignore && echo .env >> .gitignore",
+          "cd server && touch .gitignore && echo ./node_modules >> .gitignore && echo .env >> .gitignore",
           "cd server && touch .env .gitignore app.js",
           "cd server && mkdir controllers middleware models routes",
           "cd server/middleware && touch auth.js login.js",
@@ -449,20 +547,20 @@ export default function Edit(){
           "cd ./client/src && mkdir Components Styles Utils",
           "cd ./client/src/Components && touch Home.jsx About.jsx Edit.jsx Navbar.jsx",
           "cd ./client && npm install react-router-dom bootstrap tailwindcss && npx tailwindcss init",
-          "cd ./server && npm install express bcrypt body-parser cors dotenv express-session mongodb mongoose passport passport-local nodemon",
+          "cd ./server && npm install express bcrypt body-parser cors dotenv express-session mongodb mongoose jsonwebtoken nodemon",
         ]
       }else{
         ClientOption = 2;
         scripts =[
-          "touch .gitignore && echo node_modules >> .gitignore && echo .env >> .gitignore",
+          "touch .gitignore && echo ./node_modules >> .gitignore && echo .env >> .gitignore",
           "npm init -y && npm install concurrently",
           "mkdir server && cd server && npm init -y",
-          "cd server && touch .gitignore && echo node_modules >> .gitignore && echo .env >> .gitignore",
+          "cd server && touch .gitignore && echo ./node_modules >> .gitignore && echo .env >> .gitignore",
           "cd server && touch .env .gitignore app.js",
           "cd server && mkdir controllers middleware models routes",
           "cd server/middleware && touch auth.js login.js",
           "npx create-next-app@latest client",
-          "cd ./server && npm install express bcrypt body-parser cors dotenv express-session mongodb mongoose passport passport-local nodemon",
+          "cd ./server && npm install express bcrypt body-parser cors dotenv express-session mongodb mongoose jsonwebtoken nodemon",
         ];
       }
       function runScript(command, type) {
@@ -523,11 +621,14 @@ export default function Edit(){
               scripts2 = [
                 "cd ./client/src && mkdir Components",
                 "cd ./client/src/app",
-                "cd ./client/src/app && mkdir about contact login",
-                "cd ./client/src/app/about && touch page.js",
-                "cd ./client/src/app/contact && touch page.js",
-                "cd ./client/src/app/login && touch page.js",
-                "cd ./client/src/Components && touch Navbar.js",
+                "cd ./client/src/app && mkdir about contact login signup",
+                "cd ./client/src/app/about && touch page.jsx",
+                "cd ./client/src/app/contact && touch page.jsx",
+                "cd ./client/src/app/login && touch page.jsx",
+                "cd ./client/src/app/signup && touch page.jsx",
+                "cd ./client/src/Components && touch Navbar.jsx",
+                "cd ./client/src/Components && touch ServerFunctions.js",
+                "cd ./client/src && touch middleware.js"
               ]
               runScriptsSequentially(scripts2, ()=>{
                 displayMenu();
@@ -540,15 +641,33 @@ export default function Edit(){
                 }
                 const updateGlobalPackage = JSON.stringify(globalPackage, null, 2);
                 fs.writeFileSync(getPath(targtePath,"./package.json"), updateGlobalPackage, 'utf8');
+                fs.writeFileSync(getPath(targtePath,`./client/src/middleware.js`),  middleware, 'utf8');
+                fs.writeFileSync(getPath(targtePath,`./client/src/app/login/page.jsx`),  loginPage, 'utf8');
+                fs.writeFileSync(getPath(targtePath,`./client/src/app/signup/page.jsx`),  signUpPage, 'utf8');
+                fs.writeFileSync(getPath(targtePath,`./client/src/Components/ServerFunctions.js`),  serverFunctions, 'utf8');
+                landing = `import Link from "next/link";
+
+export default function Home() {
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+      <Link href="/login">Login/signup</Link>
+    </main>
+  );
+}`
+              fs.writeFileSync(getPath(targtePath, "/client/src/app/page.jsx"),  landing, 'utf8');
               })
+              fs.unlinkSync(getPath(targtePath, "/client/src/app/page.js"));
             }else{
               scripts2 = [
                 "cd ./client && mkdir Components",
-                "cd ./client/app && mkdir about contact login",
-                "cd ./client/app/about && touch page.js",
-                "cd ./client/app/contact touch page.js",
-                "cd ./client/app/login && touch page.js",
-                "cd ./client/Components && touch Navbar.js",
+                "cd ./client/app && mkdir about contact login signup",
+                "cd ./client/app/about && touch page.jsx",
+                "cd ./client/app/contact touch page.jsx",
+                "cd ./client/app/login && touch page.jsx",
+                "cd ./client/app/signup && touch page.jsx",
+                "cd ./client/Components && touch Navbar.jsx",
+                "cd ./client/Components && touch ServerFunctions.js",
+                "cd ./client && touch middleware.js"
               ],
               runScriptsSequentially(scripts2, ()=>{
                 displayMenu();
@@ -561,6 +680,20 @@ export default function Edit(){
                 }
                 const updateGlobalPackage = JSON.stringify(globalPackage, null, 2);
                 fs.writeFileSync(getPath(targtePath,"./package.json"), updateGlobalPackage, 'utf8');
+                fs.writeFileSync(getPath(targtePath,`./client/middleware.jsx`),  middleware, 'utf8');
+                fs.writeFileSync(getPath(targtePath,`./client/app/login/page.jsx`),  loginPage, 'utf8');
+                fs.writeFileSync(getPath(targtePath,`./client/app/signup/page.jsx`),  signUpPage, 'utf8');
+                fs.writeFileSync(getPath(targtePath,`./client/Components/ServerFunctions.js`),  serverFunctions, 'utf8');
+                landing = `import Link from "next/link";
+
+export default function Home() {
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+      <Link href="/login">Login/signup</Link>
+    </main>
+  );
+}`
+              fs.writeFileSync(getPath(targtePath, "/client/app/page.jsx"),  landing, 'utf8');
               })
             }
         }
