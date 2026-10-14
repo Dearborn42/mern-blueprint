@@ -662,7 +662,7 @@ export default function Home() {
                 "cd ./client && mkdir Components",
                 "cd ./client/app && mkdir about contact login signup",
                 "cd ./client/app/about && touch page.jsx",
-                "cd ./client/app/contact touch page.jsx",
+                "cd ./client/app/contact && touch page.jsx",
                 "cd ./client/app/login && touch page.jsx",
                 "cd ./client/app/signup && touch page.jsx",
                 "cd ./client/Components && touch Navbar.jsx",
