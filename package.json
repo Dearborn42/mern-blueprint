@@ -1,10 +1,20 @@
 {
   "name": "create-mern-stack",
-  "version": "2.0.0","description": "CLI blueprint for generating full-stack React or Next.js applications with an Express, MongoDB, and authentication backend",
-  "scripts": {},
+  "version": "2.0.0",
+  "description": "CLI blueprint for generating full-stack React or Next.js applications with an Express, MongoDB, and authentication backend",
+  "main": "bin/index.js",
   "bin": {
     "create-mern-stack": "bin/index.js"
   },
+  "files": [
+    "bin/",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Dearborn42/mern-blueprint.git"
@@ -12,7 +22,13 @@
   "keywords": [
     "mern",
     "stack",
-    "blueprint"
+    "blueprint",
+    "react",
+    "nextjs",
+    "express",
+    "mongodb",
+    "cli",
+    "scaffolding"
   ],
   "author": "Dearborn42 <amurf26@outlook.com>",
   "license": "MIT",
