@@ -1,8 +1,6 @@
 {
   "name": "create-mern-stack",
-  "version": "2.0.0",
-  "description": "Basic blueprint for mern stack",
-  "main": "index.js",
+  "version": "2.0.0","description": "CLI blueprint for generating full-stack React or Next.js applications with an Express, MongoDB, and authentication backend",
   "scripts": {},
   "bin": {
     "create-mern-stack": "bin/index.js"
